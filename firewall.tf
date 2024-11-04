@@ -4,15 +4,9 @@ data "http" "personal_ipv4" {
   url   = "https://ipv4.icanhazip.com"
 }
 
-data "http" "personal_ipv6" {
-  count = var.firewall_use_current_ip ? 1 : 0
-  url   = "https://ipv6.icanhazip.com"
-}
-
 locals {
   current_ips = var.firewall_use_current_ip ? [
     "${chomp(data.http.personal_ipv4[0].response_body)}/32",
-    "${chomp(data.http.personal_ipv6[0].response_body)}/128",
   ] : []
 
   base_firewall_rules = concat(
